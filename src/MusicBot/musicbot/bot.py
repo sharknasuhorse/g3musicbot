@@ -1674,6 +1674,35 @@ class MusicBot(discord.Client):
         return Response(self.str.get('cmd-play-playlist-reply-secs', "Enqueued {0} songs to be played in {1} seconds").format(
             songs_added, fixg(ttime, 1)), delete_after=30)
 
+    async def cmd_nasu(self, channel, player, author):
+        """
+        It update playlist entries when use this command
+        by nasu
+        """
+
+        guild = channel.guild
+        voice_client = await self.get_voice_client(author.voice.channel)
+
+        dir = 'data/%s/queue.json' % guild.id
+        async with self.aiolocks['queue_serialization' + ':' + str(guild.id)]:
+            if not os.path.isfile(dir):
+                return None
+            log.debug("Nasucmd Deserializing queue for %s", guild.id)
+            with open(dir, 'r', encoding='utf8') as f:
+                raw_json = f.read()
+        
+        data = MusicPlayer.from_json(raw_json, self, voice_client, Playlist(self))
+        log.debug("Nasucmd Update Deserializing playlist")
+        player.playlist.entries.clear()
+        log.debug(data)
+
+        for entry in data.playlist.entries:
+            log.debug("append")
+            log.debug(entry)
+            player.playlist.entries.append(entry)
+
+        return Response("Updated")
+
     async def cmd_nasudebug(self, channel, player, author):
         """
         nasu debug command
