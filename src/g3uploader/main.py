@@ -63,7 +63,6 @@ class URLPlaylistEntry():
         self.filename = filename
         self.title = title
         self.duration = duration
-#        self.meta = meta
         self.download_folder = download_folder
 
     def _enclose_json(self, data):
@@ -86,12 +85,12 @@ class URLPlaylistEntry():
             'full_filename': '/Users/sharknasuhorse/Documents/git/g3musicbot/src/MusicBot/audio_cache/' + self.filename,
             'meta': {
                 "author": {
-                    "id": 152646492593717250,
-                    "name": "sharknasuhorse",
+                    "id": 0000,
+                    "name": "g3uploader",
                     "type": "Member"
                 },
                 "channel": {
-                    "id": 632015617226047500,
+                    "id": 0000,
                     "name": "g3musicbot",
                     "type": "TextChannel"
                 }

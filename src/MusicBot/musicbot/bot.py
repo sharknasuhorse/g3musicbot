@@ -1907,9 +1907,9 @@ class MusicBot(discord.Client):
             progress_bar_length = 30
             for i in range(progress_bar_length):
                 if (percentage < 1 / progress_bar_length * i):
-                    prog_bar_str += 'â–¡'
+                    prog_bar_str += '□'
                 else:
-                    prog_bar_str += 'â– '
+                    prog_bar_str += '■'
 
             action_text = self.str.get('cmd-np-action-streaming', 'Streaming') if streaming else self.str.get('cmd-np-action-playing', 'Playing')
 
