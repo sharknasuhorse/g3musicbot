@@ -100,12 +100,6 @@ class URLPlaylistEntry():
         })
 
 
-def debug_json():
-    with open('queue.json.temp', mode='r', encoding='utf8') as f:
-        raw_json = f.read()
-    pprint(raw_json)
-
-
 if __name__ == '__main__':
     web = G3uploader()
     # debug_json()
