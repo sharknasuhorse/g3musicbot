@@ -404,7 +404,7 @@ class ConfigDefaults:
     now_playing_mentions = False
     auto_summon = True
     auto_playlist = False
-    auto_playlist_random = True
+    auto_playlist_random = False
     auto_pause = True
     delete_messages = True
     delete_invoking = False
