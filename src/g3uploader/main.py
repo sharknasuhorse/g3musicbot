@@ -43,7 +43,9 @@ class G3uploader():
             queue_json['data']['entries']['data']['entries'].append(
                 entry.__json__())
 
-            output_json_dir = '../MusicBot/data/525478015891931138/queue.json'
+            with open('../Musicbot/data/server_names.txt', mode='r', encoding='utf8') as f:
+                guildid = f.read().split()[0]
+            output_json_dir = '../MusicBot/data/%s/queue.json' % guildid
             with open(output_json_dir, mode='w', encoding='utf8') as f:
                 f.write(json.dumps(queue_json))
 
