@@ -21,7 +21,9 @@ class G3uploader():
         if request.method == 'POST':
             f = request.files['uploadFile']
             filename = secure_filename(f.filename)
-            dir = '../MusicBot/audio_cache/' + filename
+            musicbot_dir = '../MusicBot/'
+            dir = musicbot_dir + 'audio_cache/' + filename
+
             f.save(dir)
 
             # convert
@@ -34,7 +36,7 @@ class G3uploader():
             dir = dir + '.webm'
             filename = filename + '.webm'
             entry = URLPlaylistEntry(filename=filename, title=filename,
-                                     duration=duration, download_folder=dir)
+                                     duration=duration, download_folder=dir, musicbot_dir=musicbot_dir)
 
             with open('queue.json.temp', mode='r', encoding='utf8') as f:
                 queue_json = json.loads(f.read())
@@ -42,9 +44,9 @@ class G3uploader():
             queue_json['data']['entries']['data']['entries'].append(
                 entry.__json__())
 
-            with open('../Musicbot/data/server_names.txt', mode='r', encoding='utf8') as f:
+            with open(musicbot_dir + 'data/server_names.txt', mode='r', encoding='utf8') as f:
                 guildid = f.read().split()[0]
-            output_json_dir = '../MusicBot/data/%s/queue.json' % guildid
+            output_json_dir = musicbot_dir + '/data/%s/queue.json' % guildid
             with open(output_json_dir, mode='w', encoding='utf8') as f:
                 f.write(json.dumps(queue_json))
 
@@ -59,11 +61,12 @@ class G3uploader():
 
 
 class URLPlaylistEntry():
-    def __init__(self, filename, title, duration, download_folder):
+    def __init__(self, filename, title, duration, download_folder, musicbot_dir):
         self.filename = filename
         self.title = title
         self.duration = duration
         self.download_folder = download_folder
+        self.musicbot_dir = musicbot_dir
 
     def _enclose_json(self, data):
         return {
@@ -81,7 +84,7 @@ class URLPlaylistEntry():
             'downloaded': True,
             'expected_filename': None,
             'filename': 'audio_cache/' + self.filename,
-            'full_filename': os.path.abspath('../Musicbot/audio_chache/' + self.filename) + self.filename,
+            'full_filename': os.path.abspath(self.musicbot_dir + 'audio_chache/' + self.filename) + self.filename,
             'meta': {
                 "author": {
                     "id": 0000,
