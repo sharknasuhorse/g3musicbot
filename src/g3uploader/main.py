@@ -21,7 +21,6 @@ class G3uploader():
         if request.method == 'POST':
             f = request.files['uploadFile']
             filename = secure_filename(f.filename)
-            #dir = './upload_data/' + filename
             dir = '../MusicBot/audio_cache/' + filename
             f.save(dir)
 
@@ -80,10 +79,9 @@ class URLPlaylistEntry():
             'title': self.title,
             'duration': self.duration,
             'downloaded': True,
-            'expected_filename': 'audio_cache/' + self.filename,
+            'expected_filename': None,
             'filename': 'audio_cache/' + self.filename,
-            # 'full_filename': os.path.abspath(self.filename) if self.filename else self.filename,
-            'full_filename': '/Users/sharknasuhorse/Documents/git/g3musicbot/src/MusicBot/audio_cache/' + self.filename,
+            'full_filename': os.path.abspath('../Musicbot/audio_chache/' + self.filename) + self.filename,
             'meta': {
                 "author": {
                     "id": 0000,
