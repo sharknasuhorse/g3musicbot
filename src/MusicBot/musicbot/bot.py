@@ -42,6 +42,7 @@ from .json import Json
 from .constants import VERSION as BOTVERSION
 from .constants import DISCORD_MSG_CHAR_LIMIT, AUDIO_CACHE_PATH
 
+
 load_opus_lib()
 
 log = logging.getLogger(__name__)
@@ -1858,9 +1859,9 @@ class MusicBot(discord.Client):
             progress_bar_length = 30
             for i in range(progress_bar_length):
                 if (percentage < 1 / progress_bar_length * i):
-                    prog_bar_str += '□'
+                    prog_bar_str += 'â–¡'
                 else:
-                    prog_bar_str += '■'
+                    prog_bar_str += 'â– '
 
             action_text = self.str.get('cmd-np-action-streaming', 'Streaming') if streaming else self.str.get('cmd-np-action-playing', 'Playing')
 
