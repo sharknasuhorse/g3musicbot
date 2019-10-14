@@ -55,7 +55,7 @@ class G3uploader():
         return render_template('upload.html')
 
     def run(self, debug, host):
-        self.app.run(debug=True, host=host)
+        self.app.run(debug=debug, host=host)
 
 # Musicbot.entry
 
@@ -101,7 +101,7 @@ class URLPlaylistEntry():
         })
 
 
-if __name__ == '__main__':
-    web = G3uploader()
-    # debug_json()
-    web.run(debug=True, host='0.0.0.0')
+# if __name__ == '__main__':
+#    web = G3uploader()
+#    # debug_json()
+#    web.run(debug=True, host='0.0.0.0')
