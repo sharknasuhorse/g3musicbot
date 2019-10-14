@@ -1703,7 +1703,12 @@ class MusicBot(discord.Client):
             log.debug(entry)
             player.playlist.entries.append(entry)
 
-        return Response("Updated")
+        from .player import MusicPlayerState
+        if player.state == MusicPlayerState.STOPPED:
+            player.play()
+            return Response('Updated and play now')
+
+        return Response('Updated')
 
     async def cmd_nasudebug(self, channel, player, author):
         """
@@ -1713,6 +1718,9 @@ class MusicBot(discord.Client):
         for entry in playlist.entries:
             log.debug(vars(entry))
 
+    async def cmd_playforce(self, channel, player, author):
+        player.play()
+        return Response('play force')
 
     async def cmd_stream(self, player, channel, author, permissions, song_url):
         """
