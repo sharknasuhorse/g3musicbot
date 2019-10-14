@@ -2,7 +2,7 @@ options.ini
 .python-version
 __pycache__
 upload_data/
-queue.json.temp
+
 
 .idea/
 *.pyc
