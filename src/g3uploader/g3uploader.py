@@ -21,7 +21,7 @@ class G3uploader():
         if request.method == 'POST':
             f = request.files['uploadFile']
             filename = secure_filename(f.filename)
-            musicbot_dir = '../MusicBot/'
+            musicbot_dir = ''
             dir = musicbot_dir + 'audio_cache/' + filename
 
             f.save(dir)
@@ -38,7 +38,7 @@ class G3uploader():
             entry = URLPlaylistEntry(filename=filename, title=filename,
                                      duration=duration, download_folder=dir, musicbot_dir=musicbot_dir)
 
-            with open('queue.json.temp', mode='r', encoding='utf8') as f:
+            with open('g3uploader/queue.json.temp', mode='r', encoding='utf8') as f:
                 queue_json = json.loads(f.read())
 
             queue_json['data']['entries']['data']['entries'].append(
@@ -46,7 +46,7 @@ class G3uploader():
 
             with open(musicbot_dir + 'data/server_names.txt', mode='r', encoding='utf8') as f:
                 guildid = f.read().split()[0]
-            output_json_dir = musicbot_dir + '/data/%s/queue.json' % guildid
+            output_json_dir = musicbot_dir + 'data/%s/queue.json' % guildid
             with open(output_json_dir, mode='w', encoding='utf8') as f:
                 f.write(json.dumps(queue_json))
 
