@@ -2,6 +2,8 @@
 
 from __future__ import print_function
 
+from g3uploader.g3uploader import G3uploader
+from multiprocessing import Process
 import os
 import sys
 import time
@@ -349,7 +351,7 @@ def pyexec(pycom, *args, pycom2=None):
     os.execlp(pycom, pycom2, *args)
 
 
-def main():
+def musicbot_main():
     # TODO: *actual* argparsing
 
     if '--no-checks' not in sys.argv:
@@ -368,7 +370,6 @@ def main():
 
     loops = 0
     max_wait_time = 60
-
     while tryagain:
         # Maybe I need to try to import stuff first, then actually import stuff
         # It'd save me a lot of pain with all that awful exception type checking
@@ -380,7 +381,6 @@ def main():
 
             sh.terminator = ''
             sh.terminator = '\n'
-
             m.run()
 
         except SyntaxError:
@@ -445,5 +445,16 @@ def main():
     log.info("All done.")
 
 
+def g3uploader_web():
+
+    web = G3uploader()
+    web.run(debug=False, host='0.0.0.0')
+
+
 if __name__ == '__main__':
-    main()
+
+    g3uploader_process = Process(target=g3uploader_web)
+    g3uploader_process.start()
+
+    musicbot_process = Process(target=musicbot_main)
+    musicbot_process.start()
