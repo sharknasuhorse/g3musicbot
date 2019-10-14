@@ -42,6 +42,8 @@ from .json import Json
 from .constants import VERSION as BOTVERSION
 from .constants import DISCORD_MSG_CHAR_LIMIT, AUDIO_CACHE_PATH
 
+import json
+from .constructs import Serializer
 
 load_opus_lib()
 
