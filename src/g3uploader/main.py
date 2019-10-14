@@ -25,12 +25,15 @@ class G3uploader():
 
         return render_template('upload.html')
 
+    def run(self, debug, host):
+        self.app.run(debug=True, host=host)
 def debug_json():
     with open('queue.json.temp', mode='r', encoding='utf8') as f:
         raw_json = f.read()
     pprint(raw_json)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     web = G3uploader()
-    web.run(debug=True)
+    # debug_json()
+    web.run(debug=True, host='0.0.0.0')
