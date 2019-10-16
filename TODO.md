@@ -1,0 +1,5 @@
+- login, logout
+- CSS
+- config
+- webに再生リスト表示
+- uploadした曲を2回目再生
