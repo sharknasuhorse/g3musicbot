@@ -22,8 +22,11 @@ class G3uploader():
             f = request.files['uploadFile']
             filename = secure_filename(f.filename)
             musicbot_dir = ''
-            dir = musicbot_dir + 'audio_cache/' + filename
 
+            if not os.path.isdir(musicbot_dir + 'audio_cache/'):
+                os.makedirs(musicbot_dir + 'audio_cache/')
+
+            dir = musicbot_dir + 'audio_cache/' + filename
             f.save(dir)
 
             # convert
