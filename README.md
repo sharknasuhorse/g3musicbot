@@ -9,9 +9,9 @@
 `cd g3musicbot`
 
 3. copy config  
-`cp config/example_options.ini config/options.ini`
+`cp src/config/example_options.ini src/config/options.ini`
 
-4. edit config/options.ini
+4. edit src/config/options.ini
 
     ```
     Token = bot_token

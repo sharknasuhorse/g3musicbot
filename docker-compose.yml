@@ -3,7 +3,5 @@ services:
   musicbot:
     image: g3musicbot:master
     restart: always
-    volumes:
-      - ./config:/usr/src/musicbot/config
     ports:
       - 5000:5000
