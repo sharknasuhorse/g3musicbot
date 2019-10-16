@@ -7,6 +7,3 @@ services:
       - ./config:/usr/src/musicbot/config
     ports:
       - 5000:5000
-    environment:
-      - Token=00000
-      - DevIDs=0000
