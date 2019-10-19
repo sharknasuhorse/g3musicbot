@@ -1,7 +1,7 @@
 from flask import Flask, request, redirect, render_template, abort
 from werkzeug.utils import secure_filename
 from pydub import AudioSegment
-from flask_login import LoginManager, login_user, login_required, UserMixin
+from flask_login import LoginManager, login_user, login_required, UserMixin, logout_user
 from flask_wtf import FlaskForm
 from wtforms import TextField, PasswordField, SubmitField, validators
 
@@ -61,7 +61,8 @@ class G3uploader():
     @login_required
     def logout():
         logout_user()
-        return render_template('login.html')
+        form = LoginForm()
+        return render_template('login.html', form=form)
 
     @app.route('/upload', methods=['GET', 'POST'])
     @login_required
