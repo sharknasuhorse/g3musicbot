@@ -17,9 +17,14 @@
     Token = bot_token
     DevIDs = userid
     ```
+5. edit docker-compose.yml
+    ```
+    environment:
+    - ADMIN_PASS=hogehogehoge
+    ```
 
-5. docker build  
+6. docker build  
 `docker build . -t g3musicbot:master`
 
-6. docker-compose up  
+7. docker-compose up  
 `docker-compose up -d`
