@@ -5,8 +5,10 @@
 </head>
 <body>
     <form method="post" enctype="multipart/form-data">
-        <input type="file" name="uploadFile" />
-        <input type="submit" value="Upload" />
+        {{ form.csrf_token }}
+        {{ form.mp3.label }} {{ form.mp3 }}
+        <br>
+        {{ form.submit }}
     </form>
 </body>
 </html>

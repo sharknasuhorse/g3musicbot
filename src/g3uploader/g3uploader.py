@@ -4,6 +4,8 @@ from pydub import AudioSegment
 from flask_login import LoginManager, login_user, login_required, UserMixin, logout_user
 from flask_wtf import FlaskForm
 from wtforms import TextField, PasswordField, SubmitField, validators
+from flask_wtf.file import FileField, FileRequired, FileAllowed
+
 
 import json
 import os
@@ -17,6 +19,10 @@ class LoginForm(FlaskForm):
     username = TextField('Username', [validators.DataRequired(), validators.Length(min=4, max=25)])
     password = PasswordField('Password', [validators.DataRequired(), validators.Length(min=6, max=200)])
     submit = SubmitField('Login')
+
+class UploadForm(FlaskForm):
+    mp3 = FileField('mp3', validators=[FileRequired(),FileAllowed(['mp3'], 'mp3 only!')])
+    submit = SubmitField('Upload')
 
 class User(UserMixin):
     def __init__(self, id, name, password):
@@ -67,44 +73,45 @@ class G3uploader():
     @app.route('/upload', methods=['GET', 'POST'])
     @login_required
     def send():
+        form = UploadForm()
         if request.method == 'POST':
-            f = request.files['uploadFile']
-            filename = secure_filename(f.filename)
-            musicbot_dir = ''
+            if form.validate_on_submit():
+                f = form.mp3.data
+                filename = secure_filename(f.filename)
+                musicbot_dir = ''
 
-            if not os.path.isdir(musicbot_dir + 'audio_cache/'):
-                os.makedirs(musicbot_dir + 'audio_cache/')
+                if not os.path.isdir(musicbot_dir + 'audio_cache/'):
+                    os.makedirs(musicbot_dir + 'audio_cache/')
 
-            dir = musicbot_dir + 'audio_cache/' + filename
-            f.save(dir)
+                dir = musicbot_dir + 'audio_cache/' + filename
+                f.save(dir)
 
-            # convert
-            song = AudioSegment.from_mp3(
-                dir)
-            duration = int('{:.0f}'.format(len(song) / 1000))
-            song.export(dir + '.webm', format='webm')
+                # convert
+                song = AudioSegment.from_mp3(
+                    dir)
+                duration = int('{:.0f}'.format(len(song) / 1000))
+                song.export(dir + '.webm', format='webm')
 
-            # output json
-            dir = dir + '.webm'
-            filename = filename + '.webm'
-            entry = URLPlaylistEntry(filename=filename, title=filename,
-                                     duration=duration, download_folder=dir, musicbot_dir=musicbot_dir)
+                # output json
+                dir = dir + '.webm'
+                filename = filename + '.webm'
+                entry = URLPlaylistEntry(filename=filename, title=filename,
+                                        duration=duration, download_folder=dir, musicbot_dir=musicbot_dir)
 
-            with open('g3uploader/queue.json.temp', mode='r', encoding='utf8') as f:
-                queue_json = json.loads(f.read())
+                with open('g3uploader/queue.json.temp', mode='r', encoding='utf8') as f:
+                    queue_json = json.loads(f.read())
 
-            queue_json['data']['entries']['data']['entries'].append(
-                entry.__json__())
+                queue_json['data']['entries']['data']['entries'].append(
+                    entry.__json__())
 
-            with open(musicbot_dir + 'data/server_names.txt', mode='r', encoding='utf8') as f:
-                guildid = f.read().split()[0]
-            output_json_dir = musicbot_dir + 'data/%s/queue.json' % guildid
-            with open(output_json_dir, mode='w', encoding='utf8') as f:
-                f.write(json.dumps(queue_json))
+                with open(musicbot_dir + 'data/server_names.txt', mode='r', encoding='utf8') as f:
+                    guildid = f.read().split()[0]
+                output_json_dir = musicbot_dir + 'data/%s/queue.json' % guildid
+                with open(output_json_dir, mode='w', encoding='utf8') as f:
+                    f.write(json.dumps(queue_json))
 
-            return redirect(request.url)
-
-        return render_template('upload.html')
+                return redirect(request.url)
+        return render_template('upload.html', form=form)
 
     def run(self, debug, host):
         self.app.run(debug=debug, host=host)
