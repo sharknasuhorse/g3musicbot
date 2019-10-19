@@ -1,22 +1,70 @@
-from flask import Flask, request, redirect, render_template
+from flask import Flask, request, redirect, render_template, abort
 from werkzeug.utils import secure_filename
 from pydub import AudioSegment
+from flask_login import LoginManager, login_user, login_required, UserMixin
+from flask_wtf import FlaskForm
+from wtforms import TextField, PasswordField, SubmitField, validators
+
 import json
 import os
+
 
 # set -x FLASK_APP src/main.py
 # set -x FLASK_EsNV development
 # flask run
 
+class LoginForm(FlaskForm):
+    username = TextField('Username', [validators.DataRequired(), validators.Length(min=4, max=25)])
+    password = PasswordField('Password', [validators.DataRequired(), validators.Length(min=6, max=200)])
+    submit = SubmitField('Login')
+
+class User(UserMixin):
+    def __init__(self, id, name, password):
+        self.id = id
+        self.name = name
+        self.password = password
+
+#    def get(self):
+#        return self.id
+
+users = {
+    1: User(1,'admin', os.environ['ADMIN_PASS'])
+}
 
 class G3uploader():
 
     app = Flask(__name__)
-    @app.route('/')
-    def hello_world():
-        return 'Hello, World!'
+    app.secret_key = 'jrnfuiwenfiqniqwnfoiwqjfoieqwjfwiogjqwe'
+    login_manager = LoginManager()
+    login_manager.init_app(app)
+
+    @login_manager.user_loader
+    def load_user(user_id):
+        return users.get(int(user_id))
+
+    @app.route('/login', methods=['GET', 'POST'])
+    def login():
+        form = LoginForm()
+        if request.method == 'POST':
+            if form.validate_on_submit():
+                if request.form['username'] == 'admin' and request.form['password'] == os.environ['ADMIN_PASS']:
+                    login_user(User('1', 'admin', request.form['password']))
+                    return redirect('/upload')
+                else:
+                    return abort(401)
+            else:
+                return abort(401)
+        else: 
+            return render_template('login.html', form=form) 
+
+    @app.route('/logout')
+    @login_required
+    def logout():
+        logout_user()
+        return render_template('login.html')
 
     @app.route('/upload', methods=['GET', 'POST'])
+    @login_required
     def send():
         if request.method == 'POST':
             f = request.files['uploadFile']
@@ -103,8 +151,6 @@ class URLPlaylistEntry():
             'aoptions': '-vn'
         })
 
-
-# if __name__ == '__main__':
-#    web = G3uploader()
-#    # debug_json()
-#    web.run(debug=True, host='0.0.0.0')
+if __name__ == '__main__':
+    web = G3uploader()
+    web.run(debug=True, host='0.0.0.0')
