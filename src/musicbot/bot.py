@@ -604,7 +604,7 @@ class MusicBot(discord.Client):
                     player.once('play', lambda player, **_: _autopause(player))
 
                 try:
-                    await player.playlist.add_entry(song_url, channel=None, author=None)
+                    await player.playlist.add_entry(song_url, channel=None, author=None, head=False)
                 except exceptions.ExtractionError as e:
                     log.error("Error adding song from autoplaylist: {}".format(e))
                     log.debug('', exc_info=True)
@@ -1303,7 +1303,7 @@ class MusicBot(discord.Client):
             )
         return True
 
-    async def cmd_play(self, message, player, channel, author, permissions, leftover_args, song_url):
+    async def cmd_play(self, message, player, channel, author, permissions, leftover_args, song_url, head=False):
         """
         Usage:
             {command_prefix}play song_link
@@ -1561,7 +1561,7 @@ class MusicBot(discord.Client):
                         expire_in=30
                     )
 
-                entry, position = await player.playlist.add_entry(song_url, channel=channel, author=author)
+                entry, position = await player.playlist.add_entry(song_url, channel=channel, author=author, head=head)
 
                 reply_text = self.str.get('cmd-play-song-reply', "Enqueued `%s` to be played. Position in queue: %s")
                 btext = entry.title
@@ -1581,6 +1581,15 @@ class MusicBot(discord.Client):
                 reply_text %= (btext, position, ftimedelta(time_until))
 
         return Response(reply_text, delete_after=30)
+
+    async def cmd_playtop(self, message, player, channel, author, permissions, leftover_args, song_url):
+        """
+        Usage:
+            {command_prefix}playtop song_link
+
+        Adds the song to the head playlist. 
+        """ 
+        return await self.cmd_play(message, player, channel, author, permissions, leftover_args, song_url, True)
 
     async def _cmd_play_playlist_async(self, player, channel, author, permissions, playlist_url, extractor_type):
         """
