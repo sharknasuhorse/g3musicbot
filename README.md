@@ -9,7 +9,11 @@
 `cd g3musicbot`
 
 3. copy config  
-`cp src/config/example_options.ini src/config/options.ini`
+    ```
+    cp src/config/example_options.ini src/config/options.ini
+    cp src/config/example_aliases.json src/config/aliases.json
+    cp src/config/example_permissions.ini src/config/permissions.ini
+    ```
 
 4. edit src/config/options.ini
 
